@@ -54,8 +54,8 @@ class Main_OT_Generator(bpy.types.Operator):
                         shapename=scene.recursive_show(obj.children)
                     selectedchair=random.choice(chairs)
                     selecteddeco=random.choice(decolist)
-                    bpy.context.layer_collection.children[selectedchair].exclude = False
-                    bpy.context.layer_collection.children[selecteddeco].exclude = False
+                    bpy.context.view_layer.layer_collection.children[selectedchair].exclude = False
+                    bpy.context.view_layer.layer_collection.children[selecteddeco].exclude = False
                     bpy.data.objects[name].hide_viewport = True
                     bpy.data.objects[name].hide_render = True
                     for i in cameras:
