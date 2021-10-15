@@ -12,7 +12,7 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 bl_info = {
-    "name" : "Table-Generator-1.2",
+    "name" : "Table-Generator-1_2",
     "author" : "Ayush Yadav",
     "description" : "",
     "blender" : (2, 80, 0),
