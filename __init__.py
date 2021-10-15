@@ -16,7 +16,7 @@ bl_info = {
     "author" : "Ayush Yadav",
     "description" : "",
     "blender" : (2, 80, 0),
-    "version" : (0, 0, 1),
+    "version" : (1, 2, 1),
     "location" : "View3D",
     "warning" : "",
     "category" : "Generic"
