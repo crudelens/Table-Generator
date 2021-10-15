@@ -105,7 +105,7 @@ class Main_OT_Generator(bpy.types.Operator):
         for name in all:
             if name.startswith("Chairs"):
                 list.append(name)
-                bpy.context.layer_collection.children[name].exclude = True
+                bpy.context.view_layer.layer_collection.children[name].exclude = True
         return list
     
     def decoselector(self):
@@ -114,7 +114,7 @@ class Main_OT_Generator(bpy.types.Operator):
         for name in all:
             if name.startswith("Deco"):
                 list.append(name)
-                bpy.context.layer_collection.children[name].exclude = True
+                bpy.context.view_layer.layer_collection.children[name].exclude = True
         return list
     
     def camselect(self):
