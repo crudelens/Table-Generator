@@ -16,71 +16,82 @@ class Main_OT_Generator(bpy.types.Operator):
         scene = context.scene.your_properties
         bpy.ops.object.hide_view_clear()
         legname=scene.showleg()
-        #try:
-        cameras=self.camselect()
-        chairs=self.chairselector()
-        decolist=self.decoselector()
-        renderdir=bpy.data.scenes["Scene.001"].render.filepath
-        all = [item.name for item in bpy.data.objects]
-        for name in all:
-            if name.startswith("Texturemat_TABLETOPMAT_e"):
-                bpy.data.objects[name].hide_viewport = True
-                bpy.data.objects[name].hide_render = True
-                list_of_children = bpy.data.objects[name].children
-                for obj in list_of_children:
-                    obj.hide_viewport = True
-                    obj.hide_render = True
-                    scene.recursive_child(obj.children)
-        bpy.context.scene.render.engine = scene.renderengine
-        bpy.context.scene.render.use_overwrite = False
-        for name in all:
-            if name.startswith("Texturemat_TABLETOPMAT_e"):
-                material = bpy.data.materials["Tabletop"]
-                nodes = material.node_tree.nodes
-                principled = next(n for n in nodes if n.type == 'BSDF_PRINCIPLED')
-                base_color = principled.inputs['Base Color'] #Or principled.inputs[0]
-                link = base_color.links[0]
-                link_node = link.from_node
-                try:
-                    link_node.image.unpack(method='REMOVE')
-                except:
-                    pass
-                link_node.image.filepath=self.imageselector()
-                link_node.image.name=os.path.basename(link_node.image.filepath)
-                print(link_node.image.name)
-                bpy.data.objects[name].hide_viewport = False
-                bpy.data.objects[name].hide_render = False
-                list_of_children = bpy.data.objects[name].children
-                for obj in list_of_children:
-                    obj.hide_viewport = False
-                    obj.hide_render = False
-                    shapename=scene.recursive_show(obj.children)
-                selectedchair=random.choice(chairs)
-                selecteddeco=random.choice(decolist)
-                bpy.context.view_layer.layer_collection.children[selectedchair].exclude = False
-                bpy.context.view_layer.layer_collection.children[selecteddeco].exclude = False
-                bpy.data.objects[name].hide_viewport = True
-                bpy.data.objects[name].hide_render = True
-                for i in cameras:
-                    bpy.context.scene.camera=i
-                    bpy.data.scenes["Scene.001"].render.filepath=f"{renderdir}{shapename}.{legname}.{i.name}.{link_node.image.name}"
-                    if f"{shapename}.{legname}.{i.name}.{link_node.image.name}.jpg" in os.listdir(renderdir):
-                        self.report({'INFO'}, f"{shapename}.{legname}.{i.name}.{link_node.image.name}.jpg already exists")
-                        break
-                    else:
-                        bpy.ops.render.render(animation=False, write_still=True, use_viewport=True, scene="Scene.001")
-                        print(f"{name} rendered")
-                for obj in list_of_children:
-                    obj.hide_viewport = True
-                    obj.hide_render = True
-                    scene.recursive_child(obj.children)
-                bpy.context.layer_collection.children[selectedchair].exclude = True
-                bpy.context.layer_collection.children[selecteddeco].exclude = True
-        renderdir=bpy.data.scenes["Scene.001"].render.filepath
-        return {'FINISHED'}
-        #except:
-            #self.report({'WARNING'}, "INVALID FILEPATH")
-            #return {'CANCELLED'}
+        try:
+            cameras=self.camselect()
+            chairs=self.chairselector()
+            decolist=self.decoselector()
+            renderdir=bpy.data.scenes["Scene.001"].render.filepath
+            all = [item.name for item in bpy.data.objects]
+            for name in all:
+                if name.startswith("Texturemat_TABLETOPMAT_e"):
+                    bpy.data.objects[name].hide_viewport = True
+                    bpy.data.objects[name].hide_render = True
+                    list_of_children = bpy.data.objects[name].children
+                    for obj in list_of_children:
+                        obj.hide_viewport = True
+                        obj.hide_render = True
+                        scene.recursive_child(obj.children)
+            bpy.context.scene.render.engine = scene.renderengine
+            bpy.context.scene.render.use_overwrite = False
+            for name in all:
+                if name.startswith("Texturemat_TABLETOPMAT_e"):
+                    material = bpy.data.materials["Tabletop"]
+                    nodes = material.node_tree.nodes
+                    principled = next(n for n in nodes if n.type == 'BSDF_PRINCIPLED')
+                    base_color = principled.inputs['Base Color'] #Or principled.inputs[0]
+                    link = base_color.links[0]
+                    link_node = link.from_node
+                    try:
+                        link_node.image.unpack(method='REMOVE')
+                    except:
+                        pass
+                    link_node.image.filepath=self.imageselector()
+                    link_node.image.name=os.path.basename(link_node.image.filepath)
+                    print(link_node.image.name)
+                    bpy.data.objects[name].hide_viewport = False
+                    bpy.data.objects[name].hide_render = False
+                    list_of_children = bpy.data.objects[name].children
+                    for obj in list_of_children:
+                        obj.hide_viewport = False
+                        obj.hide_render = False
+                        shapename=scene.recursive_show(obj.children)
+                    selectedchair=random.choice(chairs)
+                    selecteddeco=random.choice(decolist)
+                    bpy.context.view_layer.layer_collection.children[selectedchair].exclude = False
+                    bpy.context.view_layer.layer_collection.children[selecteddeco].exclude = False
+                    bpy.data.objects[name].hide_viewport = True
+                    bpy.data.objects[name].hide_render = True
+                    for i in cameras:
+                        all = [item.name for item in bpy.data.collections]
+                        for name in all:
+                            if name.startswith('Collection'):
+                                bpy.data.collections[name].hide_viewport = False
+                                bpy.data.collections[name].hide_render = False
+                        if i.name=="CameraWhiteBG":
+                            all = [item.name for item in bpy.data.collections]
+                            for name in all:
+                                if name.startswith('Collection'):
+                                    bpy.data.collections[name].hide_viewport = True
+                                    bpy.data.collections[name].hide_render = True
+                        bpy.context.scene.camera=i
+                        bpy.data.scenes["Scene.001"].render.filepath=f"{renderdir}{shapename}.{legname}.{i.name}.{link_node.image.name}"
+                        if f"{shapename}.{legname}.{i.name}.{link_node.image.name}.jpg" in os.listdir(renderdir):
+                            self.report({'INFO'}, f"{shapename}.{legname}.{i.name}.{link_node.image.name}.jpg already exists")
+                            break
+                        else:
+                            bpy.ops.render.render(animation=False, write_still=True, use_viewport=True, scene="Scene.001")
+                            print(f"{name} rendered")
+                    for obj in list_of_children:
+                        obj.hide_viewport = True
+                        obj.hide_render = True
+                        scene.recursive_child(obj.children)
+                    bpy.context.layer_collection.children[selectedchair].exclude = True
+                    bpy.context.layer_collection.children[selecteddeco].exclude = True
+            renderdir=bpy.data.scenes["Scene.001"].render.filepath
+            return {'FINISHED'}
+        except:
+            self.report({'WARNING'}, "INVALID FILEPATH")
+            return {'CANCELLED'}
 
 
     def updatingsettings(self,context):
